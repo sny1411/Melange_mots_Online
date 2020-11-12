@@ -1,15 +1,15 @@
 #coding:utf-8
 
 import tkinter
-import socket
+import host
+import join
+
 
 def clickOnHost():
-    host, port = ('', 5566)
-    serv = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    serv.bind((host, port))
-    print(f"Le serveur est démarré sur le port {port}")
+    host.runServeur()
     windowMenu.quit()
 def clickOnJoin():
+    join.JoinGame()
     windowMenu.quit()
 
 windowMenu = tkinter.Tk()
