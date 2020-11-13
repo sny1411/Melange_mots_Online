@@ -11,6 +11,8 @@ def clickOnHost():
 def clickOnJoin():
     join.JoinGame()
     windowMenu.quit()
+def clickOnConfig():
+    pass
 
 windowMenu = tkinter.Tk()
 windowMenu.title("Mélange mots - ONLINE")
@@ -21,6 +23,7 @@ windowMenu.resizable(width=False,height=False)
 
 tkBtnHost = tkinter.Button(windowMenu, text="Héberger une partie",command=clickOnHost)
 tkBtnJoin = tkinter.Button(windowMenu, text="Rejoindre une partie",command=clickOnJoin)
+tkBtnConfig = tkinter.Button(windowMenu, text="Rejoindre une partie",command=clickOnConfig)
 
 tkBtnHost.place(x=windowMenu_x//2 - 75,y=10, width=150,height=50)
 tkBtnJoin.place(x=windowMenu_x//2 - 75,y=70, width=150,height=50)
