@@ -19,3 +19,6 @@ def learnConfig():
 
 if __name__ == "__main__":
     print(learnConfig())
+    test = learnConfig()
+
+    print(test["port"])
