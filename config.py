@@ -1,6 +1,6 @@
 #coding:utf-8
 
-import pickle
+import tkinter
 from tkinter import messagebox
 
 def learnConfig():
@@ -16,6 +16,23 @@ def learnConfig():
                 break
     return dicoConfig
 
+def menueConfig(window):
+    dicoConfig = learnConfig()
+    configMenue = tkinter.Toplevel(window)
+    configMenue.title("")
+
+    var_port = tkinter.StringVar()
+    var_port.set(dicoConfig["port"])
+    var_username = tkinter.StringVar()
+    var_username.set(dicoConfig["username"])
+
+    tkLabelPort = tkinter.Label(configMenue,text="port de connexion :")
+    tkInputPort = tkinter.Entry(configMenue,textvariable=var_port)
+    tkLabelPort.pack()
+    tkInputPort.pack()
+    
+    
+    
 
 if __name__ == "__main__":
     print(learnConfig())
