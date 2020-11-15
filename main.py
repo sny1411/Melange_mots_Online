@@ -6,6 +6,7 @@ import join
 import config
 
 
+
 def clickOnHost():
     host.runServeur()
     windowMenu.quit()
