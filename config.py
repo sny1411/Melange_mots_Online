@@ -42,6 +42,12 @@ def menueConfig(window):
     tkLabelUsername.place(x=10,y=50)
     tkInputUsername.place(x=100,y=50,width=70)
     btChangeUsername.place(x=175,y=49)
+
+def changePort():
+    with open("config.txt","x") as config:
+        pass
+def changeUsername():
+    pass
     
     
     
