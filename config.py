@@ -1,20 +1,9 @@
 #coding:utf-8
 
+import os.path
 import tkinter
 from tkinter import messagebox
 
-def learnConfig():
-    dicoConfig = {}
-    with open("config.txt","r") as config:
-        tableauConfig = config.readlines()
-        for lines in tableauConfig:
-            try:
-                linesSplit = lines.split(":")
-                dicoConfig[linesSplit[0]] = linesSplit[1]
-            except:
-                messagebox.showerror("ERREUR","un probleme dans la configuration est survenu !")
-                break
-    return dicoConfig
 
 def menueConfig(window):
     dicoConfig = learnConfig()
@@ -31,29 +20,45 @@ def menueConfig(window):
 
     tkLabelPort = tkinter.Label(configMenue,text="port de connexion :")
     tkInputPort = tkinter.Entry(configMenue,textvariable=var_port)
-    btChangePort = tkinter.Button(configMenue,text="changer")
     tkLabelPort.place(x=10,y=5)
     tkInputPort.place(x=120,y=5,width=50)
-    btChangePort.place(x=175,y=4)
 
     tkLabelUsername = tkinter.Label(configMenue,text="Votre pseudo :")
     tkInputUsername = tkinter.Entry(configMenue,textvariable=var_username)
-    btChangeUsername = tkinter.Button(configMenue,text="changer")
     tkLabelUsername.place(x=10,y=50)
     tkInputUsername.place(x=100,y=50,width=70)
-    btChangeUsername.place(x=175,y=49)
 
-def changePort():
-    with open("config.txt","x") as config:
-        pass
-def changeUsername():
-    pass
-    
-    
-    
+    tkBtnSave = tkinter.Button(configMenue,text="Sauvegarder",command=lambda: saveSettings(var_port,var_username))
+    tkBtnSave.place(x=100,y=175)
+    tkBtnRetour = tkinter.Button(configMenue,text="Retour",command=configMenue.destroy)
+    tkBtnRetour.place(x=150,y=175)
+
+def learnConfig():
+    dicoConfig = {}
+    if os.path.exists("config.txt"):
+        with open("config.txt","r") as config:
+            tableauConfig = config.readlines()
+            for lines in tableauConfig:
+                try:
+                    if lines.strip() == "":
+                        print("line vide")
+                    else:
+                        linesSplit = lines.split(":")
+                        dicoConfig[linesSplit[0]] = linesSplit[1]
+                except:
+                    messagebox.showerror("ERREUR","un probleme dans la configuration est survenu !")
+                    break
+    else:
+        print("probleme de fichier")
+    return dicoConfig
+
+def saveSettings(var_port,var_username):
+    with open("config.txt","w") as config:
+        line = f"port:{var_port.get()}\nusername:{var_username.get()}"
+        config.write(line)
+
 
 if __name__ == "__main__":
     print(learnConfig())
     test = learnConfig()
-
     print(test["port"])
