@@ -17,6 +17,8 @@ def menueConfig(window):
     var_port.set(dicoConfig["port"])
     var_username = tkinter.StringVar()
     var_username.set(dicoConfig["username"])
+    var_ipConnect = tkinter.StringVar()
+    var_ipConnect.set(dicoConfig["ipConnect"])
 
     tkLabelPort = tkinter.Label(configMenue,text="port de connexion :")
     tkInputPort = tkinter.Entry(configMenue,textvariable=var_port)
@@ -28,8 +30,13 @@ def menueConfig(window):
     tkLabelUsername.place(x=10,y=50)
     tkInputUsername.place(x=100,y=50,width=70)
 
-    tkBtnSave = tkinter.Button(configMenue,text="Sauvegarder",command=lambda: saveSettings(var_port,var_username))
-    tkBtnSave.place(x=100,y=175)
+    tkLabelIpConnect = tkinter.Label(configMenue,text="ip de connection :")
+    tkInputIpConnect = tkinter.Entry(configMenue,textvariable=var_ipConnect)
+    tkLabelIpConnect.place(x=10,y=95)
+    tkInputIpConnect.place(x=120,y=95,width=100)
+
+    tkBtnSave = tkinter.Button(configMenue,text="Sauvegarder",command=lambda: saveSettings(var_port,var_username,var_ipConnect))
+    tkBtnSave.place(x=75,y=175)
     tkBtnRetour = tkinter.Button(configMenue,text="Retour",command=configMenue.destroy)
     tkBtnRetour.place(x=150,y=175)
 
@@ -52,9 +59,9 @@ def learnConfig():
         print("probleme de fichier")
     return dicoConfig
 
-def saveSettings(var_port,var_username):
+def saveSettings(var_port,var_username,var_ipConnect):
     with open("config.txt","w") as config:
-        line = f"port:{var_port.get()}\nusername:{var_username.get()}"
+        line = f"port:{var_port.get()}\nusername:{var_username.get()}\nipConnect:{var_ipConnect.get()}"
         config.write(line)
 
 

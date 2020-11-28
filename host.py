@@ -37,7 +37,7 @@ def runServeur():
     tkListeJoueur = wSalleAttente()
     while GamePasDemarer:
         serv.listen(10)
-        conn, adress = serv.accept()
+        conn ,adress= serv.accept() # revoie un tuple (conn et adress) mais pas besoin de adress la :)
         pseudoJoueur = conn.recv(16)
         pseudoJoueur = pseudoJoueur.decode("utf8")
         dicoConn.append(conn)
