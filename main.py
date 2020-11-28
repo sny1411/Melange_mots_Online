@@ -8,11 +8,14 @@ import config
 
 
 def clickOnHost():
+    windowMenu.quit()
+    windowMenu.destroy()
     host.runServeur()
-    windowMenu.quit()
+
 def clickOnJoin():
+    
+    windowMenu.destroy()
     join.JoinGame()
-    windowMenu.quit()
 def clickOnConfig():
     config.menueConfig(windowMenu)
 
