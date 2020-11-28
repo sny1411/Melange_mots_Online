@@ -9,6 +9,20 @@ import threading
 GamePasDemarer = True
 dicoConn = []
 
+def wSalleAttente():
+    wSalleAttente = tkinter.Tk()
+    wSalleAttente.title("Salle d'attente")
+    wSalleAttente_x = 500
+    wSalleAttente_y = 500
+    wSalleAttente.geometry(f"{wSalleAttente_x}x{wSalleAttente_y}")
+    wSalleAttente.resizable(width=False,height=False)
+
+    tkListeJoueur = tkinter.Listbox(wSalleAttente)
+    tkListeJoueur.pack()
+
+    wSalleAttente.mainloop()
+    return tkListeJoueur
+
 def runServeur():
     host, port = (None,None)
     serv = None
@@ -20,7 +34,7 @@ def runServeur():
     except ValueError:
         messagebox.showerror("ERREUR","Le port n'est surement pas lisible")
     print(f"Le serveur est démarré sur le port {port}")
-    TksalleAttenteJeu()
+    tkListeJoueur = wSalleAttente()
     while GamePasDemarer:
         serv.listen(10)
         conn, adress = serv.accept()
@@ -28,16 +42,17 @@ def runServeur():
         pseudoJoueur = pseudoJoueur.decode("utf8")
         dicoConn.append(conn)
 
-        my_thread = ThreadForClient(conn,pseudoJoueur)
+        my_thread = ThreadForClient(conn,pseudoJoueur,tkListeJoueur)
         my_thread.start()
 
         print("client connecté")
 
 class ThreadForClient(threading.Thread):
-    def __init__(self, conn,pseudoJoueur):
+    def __init__(self, conn,pseudoJoueur,tkListeJoueur):
         threading.Thread.__init__(self)
         self.conn = conn
         self.pseudo = pseudoJoueur
+        tkListeJoueur.insert(pseudoJoueur)
 
     def run(self):
         print(self.conn)
@@ -60,19 +75,6 @@ class ThreadForClient(threading.Thread):
                 break
 
 
-def TksalleAttenteJeu():
-    wSalleAttente = tkinter.Tk()
-    wSalleAttente.title("Salle d'attente")
-    wSalleAttente_x = 500
-    wSalleAttente_y = 500
-    wSalleAttente.geometry(f"{wSalleAttente_x}x{wSalleAttente_y}")
-    wSalleAttente.resizable(width=False,height=False)
-
-    tkListeJoueur = tkinter.Listbox(wSalleAttente)
-    tkListeJoueur.pack()
-
-    wSalleAttente.mainloop()
-
 def game():
     wGameHost = tkinter.Tk()
     wGameHost.title("Mélange mots - HOST")
@@ -81,5 +83,3 @@ def game():
     wGameHost.geometry(f"{wGameHost_x}x{wGameHost_y}")
     wGameHost.resizable(width=False,height=False)
 
-if __name__ == "__main__":
-    TksalleAttenteJeu()
