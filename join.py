@@ -11,8 +11,8 @@ def JoinGame():
         print((host,port))
         serv = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         serv.connect((host, port))
-    except:
-        print("y a un truc qui va pas :(")
+    except Exception as identifier:
+        print(identifier)
     else:
         print("client connecté !")
         messagebox.showinfo("CLIENT","CONNECTION REUSSITE !")
