@@ -9,19 +9,36 @@ import threading
 GamePasDemarer = True
 dicoConn = []
 
-def wSalleAttente():
-    wSalleAttente = tkinter.Tk()
-    wSalleAttente.title("Salle d'attente")
-    wSalleAttente_x = 500
-    wSalleAttente_y = 500
-    wSalleAttente.geometry(f"{wSalleAttente_x}x{wSalleAttente_y}")
-    wSalleAttente.resizable(width=False,height=False)
+class wSalleAttente(threading.Thread):
 
-    tkListeJoueur = tkinter.Listbox(wSalleAttente)
-    tkListeJoueur.pack()
+    def __init__(self):
+        wSalleAttente = tkinter.Tk()
+        wSalleAttente.title("Salle d'attente")
+        wSalleAttente_x = 500
+        wSalleAttente_y = 500
+        wSalleAttente.geometry(f"{wSalleAttente_x}x{wSalleAttente_y}")
+        wSalleAttente.resizable(width=False,height=False)
 
-    wSalleAttente.mainloop()
-    return tkListeJoueur
+        self.tkListeJoueur = tkinter.Listbox(wSalleAttente)
+        self.tkListeJoueur.pack()
+        
+        wSalleAttente.mainloop()
+    def newPlayer(self,pseudo):
+        self.tkListeJoueur.insert("end", pseudo)
+def attendreConnexion(serv,windowAttente):
+    while GamePasDemarer:
+        print("Je cherche des gens la")
+        serv.listen(10)
+        conn ,adress= serv.accept() # renvoie un tuple (conn et adress) mais pas besoin de adress la :)
+        pseudoJoueur = conn.recv(16)
+        pseudoJoueur = pseudoJoueur.decode("utf8")
+        windowAttente.newPlayer(pseudoJoueur)
+        dicoConn.append(conn)
+
+        my_thread = ThreadForClient(conn,pseudoJoueur)
+        my_thread.start()
+        
+        print("client connecté")
 
 def runServeur():
     host, port = (None,None)
@@ -34,25 +51,22 @@ def runServeur():
     except ValueError:
         messagebox.showerror("ERREUR","Le port n'est surement pas lisible")
     print(f"Le serveur est démarré sur le port {port}")
-    tkListeJoueur = wSalleAttente()
-    while GamePasDemarer:
-        serv.listen(10)
-        conn ,adress= serv.accept() # renvoie un tuple (conn et adress) mais pas besoin de adress la :)
-        pseudoJoueur = conn.recv(16)
-        pseudoJoueur = pseudoJoueur.decode("utf8")
-        dicoConn.append(conn)
 
-        my_thread = ThreadForClient(conn,pseudoJoueur,tkListeJoueur)
-        my_thread.start()
-
-        print("client connecté")
+    windowAttente = wSalleAttente()
+    attCO = threading.Thread(target= lambda : attendreConnexion(serv,windowAttente))
+    attCO.join()
+    windowAttente.join()
+    attCO.start()
+    windowAttente.start()
+    
+    
+    
 
 class ThreadForClient(threading.Thread):
-    def __init__(self, conn,pseudoJoueur,tkListeJoueur):
+    def __init__(self, conn,pseudoJoueur):
         threading.Thread.__init__(self)
         self.conn = conn
         self.pseudo = pseudoJoueur
-        tkListeJoueur.insert(pseudoJoueur)
 
     def run(self):
         print(self.conn)

@@ -16,7 +16,4 @@ def JoinGame():
     else:
         print("client connecté !")
         messagebox.showinfo("CLIENT","CONNECTION REUSSITE !")
-        serv.sendall(recupConfig["pseudo"])
-
-    
-
+        serv.sendall(recupConfig["username"].encode())
