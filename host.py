@@ -27,7 +27,12 @@ class wSalleAttente(threading.Thread):
         self.wSalleAttente.mainloop()
     def newPlayer(self,pseudo):
         self.tkListeJoueur.insert("end", pseudo)
-def attendreConnexion(serv,windowAttente):
+    def getTkList(self,i):
+        self.tkListeJoueur.get(i)
+    def removePlayerInList(self,i):
+        self.tkListeJoueur.delete(i)
+
+def attendreConnexion(serv,windowAttente,nbreClient):
     while GamePasDemarer:
         print("Je cherche des gens la")
         serv.listen(10)
@@ -37,7 +42,7 @@ def attendreConnexion(serv,windowAttente):
         windowAttente.newPlayer(pseudoJoueur)
         dicoConn.append(conn)
 
-        my_thread = ThreadForClient(conn,pseudoJoueur)
+        my_thread = ThreadForClient(conn,pseudoJoueur,windowAttente,nbreClient)
         my_thread.start()
         
         print("client connecté")
@@ -53,20 +58,34 @@ def runServeur():
     except ValueError:
         messagebox.showerror("ERREUR","Le port n'est surement pas lisible")
     print(f"Le serveur est démarré sur le port {port}")
+    nbreClient = NbreClientsCo()
     windowAttente = wSalleAttente()
     windowAttente.start()
-    attCO = threading.Thread(target= lambda : attendreConnexion(serv,windowAttente))
+    attCO = threading.Thread(target= lambda : attendreConnexion(serv,windowAttente,nbreClient))
     attCO.start()
     
     
+class NbreClientsCo():
+    def __init__(self):
+        self.nbreClient = 0
+
+    def newPlayer(self):
+        self.nbreClient += 1
     
+    def decoClient(self):
+        self.nbreClient -= 1
+    
+    def getNbreClient(self):
+        return self.nbreClient
     
 
 class ThreadForClient(threading.Thread):
-    def __init__(self, conn,pseudoJoueur):
+    def __init__(self, conn,pseudoJoueur,windowAttente,nbreClient):
         threading.Thread.__init__(self)
         self.conn = conn
         self.pseudo = pseudoJoueur
+        self.windowAttente = windowAttente
+        self.nbreClient = nbreClient
 
     def run(self):
         print(self.conn)
@@ -85,6 +104,9 @@ class ThreadForClient(threading.Thread):
             print(data)
             if data == "deco()":
                 print("client deconnecter")
+                for i in range(self.nbreClient.getNbreClient()):
+                    if self.windowAttente.getTkList(i) == self.pseudo:
+                        self.windowAttente.removePlayerInList(i)
                 self.conn.close()
                 break
 
