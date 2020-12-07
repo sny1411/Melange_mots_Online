@@ -12,17 +12,19 @@ dicoConn = []
 class wSalleAttente(threading.Thread):
 
     def __init__(self):
-        wSalleAttente = tkinter.Tk()
-        wSalleAttente.title("Salle d'attente")
+        threading.Thread.__init__(self)
+        self.wSalleAttente = None
+        self.tkListeJoueur = None
+    def run(self):
+        self.wSalleAttente = tkinter.Tk()
+        self.tkListeJoueur = tkinter.Listbox(self.wSalleAttente)
+        self.wSalleAttente.title("Salle d'attente")
+        self.tkListeJoueur.pack()
         wSalleAttente_x = 500
         wSalleAttente_y = 500
-        wSalleAttente.geometry(f"{wSalleAttente_x}x{wSalleAttente_y}")
-        wSalleAttente.resizable(width=False,height=False)
-
-        self.tkListeJoueur = tkinter.Listbox(wSalleAttente)
-        self.tkListeJoueur.pack()
-        
-        wSalleAttente.mainloop()
+        self.wSalleAttente.geometry(f"{wSalleAttente_x}x{wSalleAttente_y}")
+        self.wSalleAttente.resizable(width=False,height=False)
+        self.wSalleAttente.mainloop()
     def newPlayer(self,pseudo):
         self.tkListeJoueur.insert("end", pseudo)
 def attendreConnexion(serv,windowAttente):
@@ -51,13 +53,11 @@ def runServeur():
     except ValueError:
         messagebox.showerror("ERREUR","Le port n'est surement pas lisible")
     print(f"Le serveur est démarré sur le port {port}")
-
     windowAttente = wSalleAttente()
-    attCO = threading.Thread(target= lambda : attendreConnexion(serv,windowAttente))
-    attCO.join()
-    windowAttente.join()
-    attCO.start()
     windowAttente.start()
+    attCO = threading.Thread(target= lambda : attendreConnexion(serv,windowAttente))
+    attCO.start()
+    
     
     
     
