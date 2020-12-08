@@ -98,6 +98,9 @@ class ThreadForClient(threading.Thread):
             if not data:
                 dicoConn.remove(self.conn)
                 print("client deconnecter")
+                for i in range(self.nbreClient.getNbreClient()):
+                    if self.windowAttente.getTkList(i) == self.pseudo:
+                        self.windowAttente.removePlayerInList(i)
                 self.conn.close()
                 break
 
