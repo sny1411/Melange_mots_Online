@@ -2,6 +2,7 @@
 
 import socket
 import tkinter
+from tkinter.constants import END
 import config
 from tkinter import messagebox
 import threading
@@ -27,8 +28,8 @@ class wSalleAttente(threading.Thread):
         self.wSalleAttente.mainloop()
     def newPlayer(self,pseudo):
         self.tkListeJoueur.insert("end", pseudo)
-    def getTkList(self,i):
-        self.tkListeJoueur.get(i)
+    def getTkList(self):
+        return self.tkListeJoueur.get('@1,0',END)
     def removePlayerInList(self,i):
         self.tkListeJoueur.delete(i)
 
@@ -98,21 +99,18 @@ class ThreadForClient(threading.Thread):
             if not data:
                 dicoConn.remove(self.conn)
                 print("client deconnecter")
-                for i in range(self.nbreClient.getNbreClient()):
-                    if self.windowAttente.getTkList(i) == self.pseudo:
+                listPseudo = self.windowAttente.getTkList()
+                print(listPseudo)
+                i = 0
+                for pseudo in listPseudo:
+                    print(pseudo)
+                    if pseudo == self.pseudo:
                         self.windowAttente.removePlayerInList(i)
+                    i += 1
                 self.conn.close()
                 break
 
             print(data)
-            if data == "deco()":
-                print("client deconnecter")
-                for i in range(self.nbreClient.getNbreClient()):
-                    if self.windowAttente.getTkList(i) == self.pseudo:
-                        self.windowAttente.removePlayerInList(i)
-                self.conn.close()
-                break
-
 
 def game():
     wGameHost = tkinter.Tk()

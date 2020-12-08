@@ -3,6 +3,7 @@
 import config
 from tkinter import messagebox
 import socket
+import time
 
 def JoinGame():
     recupConfig = config.learnConfig()
@@ -15,5 +16,7 @@ def JoinGame():
         print(identifier)
     else:
         print("client connecté !")
-        messagebox.showinfo("CLIENT","CONNECTION REUSSITE !")
         serv.sendall(recupConfig["username"].encode())
+        messagebox.showinfo("CLIENT","CONNECTION REUSSITE !")
+        while True:
+            time.sleep(100000)
