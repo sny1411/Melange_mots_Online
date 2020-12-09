@@ -1,9 +1,9 @@
 #coding:utf-8
 
+import tkinter
 import config
 from tkinter import messagebox
 import socket
-import time
 
 def JoinGame():
     recupConfig = config.learnConfig()
@@ -18,5 +18,5 @@ def JoinGame():
         print("client connecté !")
         serv.sendall(recupConfig["username"].encode())
         messagebox.showinfo("CLIENT","CONNECTION REUSSITE !")
-        while True:
-            time.sleep(100000)
+        tk = tkinter.Tk
+        tk.mainloop()

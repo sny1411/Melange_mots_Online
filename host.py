@@ -91,12 +91,13 @@ class ThreadForClient(threading.Thread):
     def run(self):
         print(self.conn)
         while True:
-            data = self.conn.recv(1024)
-            print(dicoConn[:])
-            for msg in dicoConn:
-                msg.sendall(data)
-            data = data.decode("utf8")
-            if not data:
+            try:
+                data = self.conn.recv(1024)
+                print(dicoConn[:])
+                for msg in dicoConn:
+                    msg.sendall(data)
+                data = data.decode("utf8")
+            except:
                 dicoConn.remove(self.conn)
                 print("client deconnecter")
                 listPseudo = self.windowAttente.getTkList()
@@ -109,7 +110,6 @@ class ThreadForClient(threading.Thread):
                     i += 1
                 self.conn.close()
                 break
-
             print(data)
 
 def game():

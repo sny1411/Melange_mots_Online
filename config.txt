@@ -1,4 +1,5 @@
 port:5566
 
-username:TROUDUC
+username:sny
+
 ipConnect:127.0.0.1
