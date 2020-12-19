@@ -1,4 +1,4 @@
 port:5566
 
-username:snysny
+username:i do
 ipConnect:127.0.0.1

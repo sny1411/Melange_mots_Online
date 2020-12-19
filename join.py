@@ -1,5 +1,6 @@
 #coding:utf-8
 
+import time
 import tkinter
 import config
 from tkinter import messagebox
@@ -17,6 +18,12 @@ def JoinGame():
     else:
         print("client connecté !")
         serv.sendall(recupConfig["username"].encode())
+        print("connexion reussite")
+        """
         messagebox.showinfo("CLIENT","CONNECTION REUSSITE !")
-        tk = tkinter.Tk
+        tk = tkinter.Tk()
         tk.mainloop()
+        """
+        while True:
+            print("oui")
+            time.sleep(5)

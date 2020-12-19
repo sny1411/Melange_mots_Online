@@ -11,14 +11,23 @@ GamePasDemarer = True
 dicoConn = []
 
 class wSalleAttente(threading.Thread):
+    """classe consacré à la salle d'attente du jeu"""
+
 
     def __init__(self):
         threading.Thread.__init__(self)
         self.wSalleAttente = None
         self.tkListeJoueur = None
+
     def run(self):
+        """creation de la fenetre
+        entrée: self (vrb de __init__)
+        sortie: none"""
+
+        Fconfig = config.learnConfig()
         self.wSalleAttente = tkinter.Tk()
         self.tkListeJoueur = tkinter.Listbox(self.wSalleAttente)
+        self.tkListeJoueur.insert(END, Fconfig["username"])
         self.wSalleAttente.title("Salle d'attente")
         self.tkListeJoueur.pack()
         wSalleAttente_x = 500
@@ -26,11 +35,26 @@ class wSalleAttente(threading.Thread):
         self.wSalleAttente.geometry(f"{wSalleAttente_x}x{wSalleAttente_y}")
         self.wSalleAttente.resizable(width=False,height=False)
         self.wSalleAttente.mainloop()
+
     def newPlayer(self,pseudo):
+        """méthode qui permet de rajouter un joueur dans la liste tkinter
+        entrée: self et pseudo
+        sortie: none"""
+
         self.tkListeJoueur.insert("end", pseudo)
+
     def getTkList(self):
+        """retourne la liste des joueur sous forme de liste
+        entrée: self
+        sortie: list"""
+
         return self.tkListeJoueur.get('@1,0',END)
+
     def removePlayerInList(self,i):
+        """supprime un joueur de la liste tkinter à l'index i (la liste commence à 1...)
+        entrée: self , i
+        sortie: none"""
+
         self.tkListeJoueur.delete(i)
 
 def attendreConnexion(serv,windowAttente,nbreClient):
@@ -47,7 +71,7 @@ def attendreConnexion(serv,windowAttente,nbreClient):
         my_thread.start()
         
         print("client connecté")
-
+    print("fin de la recherche")
 def runServeur():
     host, port = (None,None)
     serv = None
@@ -67,10 +91,16 @@ def runServeur():
     
     
 class NbreClientsCo():
+    """class de méthode qui permet de compter le nbre d'utilisateur"""
+
     def __init__(self):
-        self.nbreClient = 0
+        self.nbreClient = 1
 
     def newPlayer(self):
+        """ajoute 1 à nbreClient
+        entrée: self
+        sortie: none"""
+
         self.nbreClient += 1
     
     def decoClient(self):
@@ -87,30 +117,46 @@ class ThreadForClient(threading.Thread):
         self.pseudo = pseudoJoueur
         self.windowAttente = windowAttente
         self.nbreClient = nbreClient
+        self.nbreClient.newPlayer()
 
     def run(self):
         print(self.conn)
         while True:
-            data = self.conn.recv(1024)
-            print(dicoConn[:])
-            for msg in dicoConn:
-                msg.sendall(data)
-            data = data.decode("utf8")
-            if not data: break
-        self.conn.close()
+            try:
+                data = self.conn.recv(1024)
+                print(dicoConn[:])
+                for msg in dicoConn:
+                    msg.sendall(data)
+                data = data.decode("utf8")
+                if not data: break
+            except:
+                i = 0
+                dicoConn.remove(self.conn)
+                listPseudo = self.windowAttente.getTkList()
+                for pseudo in listPseudo:
+                    print(pseudo)
+                    if pseudo == self.pseudo:
+                        self.windowAttente.removePlayerInList(i)
+                        break
+                    i += 1
+        print("déco")           
         dicoConn.remove(self.conn)
+        print(1)
+        self.nbreClient.decoClient()
         print("client deconnecter")
         listPseudo = self.windowAttente.getTkList()
         print(listPseudo)
         i = 0
         for pseudo in listPseudo:
             print(pseudo)
+            i += 1
             if pseudo == self.pseudo:
                 self.windowAttente.removePlayerInList(i)
-                i += 1
                 break
+            
             print(data)
-
+        self.conn.close()
+    
 def game():
     wGameHost = tkinter.Tk()
     wGameHost.title("Mélange mots - HOST")
