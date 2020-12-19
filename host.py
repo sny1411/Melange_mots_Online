@@ -11,7 +11,7 @@ GamePasDemarer = True
 dicoConn = []
 
 class wSalleAttente(threading.Thread):
-    """classe consacré à la salle d'attente du jeu"""
+    """class consacré à la salle d'attente du jeu"""
 
 
     def __init__(self):
@@ -44,7 +44,7 @@ class wSalleAttente(threading.Thread):
         self.tkListeJoueur.insert("end", pseudo)
 
     def getTkList(self):
-        """retourne la liste des joueur sous forme de liste
+        """retourne la liste des joueur
         entrée: self
         sortie: list"""
 
@@ -108,7 +108,7 @@ class NbreClientsCo():
     
     def getNbreClient(self):
         return self.nbreClient
-    
+
 
 class ThreadForClient(threading.Thread):
     def __init__(self, conn,pseudoJoueur,windowAttente,nbreClient):
