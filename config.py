@@ -35,7 +35,7 @@ def menueConfig(window):
     tkLabelIpConnect.place(x=10,y=95)
     tkInputIpConnect.place(x=120,y=95,width=100)
 
-    tkBtnSave = tkinter.Button(configMenue,text="Sauvegarder",command=lambda: saveSettings(var_port,var_username,var_ipConnect))
+    tkBtnSave = tkinter.Button(configMenue,text="Sauvegarder",command=lambda: saveSettings(var_port,var_username,var_ipConnect,configMenue))
     tkBtnSave.place(x=75,y=175)
     tkBtnRetour = tkinter.Button(configMenue,text="Retour",command=configMenue.destroy)
     tkBtnRetour.place(x=150,y=175)
@@ -59,10 +59,11 @@ def learnConfig():
         print("probleme de fichier")
     return dicoConfig
 
-def saveSettings(var_port,var_username,var_ipConnect):
+def saveSettings(var_port,var_username,var_ipConnect,configMenue):
     with open("config.txt","w") as config:
         line = f"port:{var_port.get()}\nusername:{var_username.get()}\nipConnect:{var_ipConnect.get()}"
         config.write(line)
+    configMenue.destroy()
 
 
 if __name__ == "__main__":
