@@ -28,8 +28,10 @@ class wSalleAttente(threading.Thread):
         self.wSalleAttente = tkinter.Tk()
         self.tkListeJoueur = tkinter.Listbox(self.wSalleAttente)
         self.tkListeJoueur.insert(END, Fconfig["username"])
+        self.tkButtonStart = tkinter.Button(self.wSalleAttente, text="START", command=lambda : startGame(self.wSalleAttente))
         self.wSalleAttente.title("Salle d'attente")
         self.tkListeJoueur.pack()
+        self.tkButtonStart.pack()
         wSalleAttente_x = 500
         wSalleAttente_y = 500
         self.wSalleAttente.geometry(f"{wSalleAttente_x}x{wSalleAttente_y}")
@@ -157,9 +159,12 @@ class ThreadForClient(threading.Thread):
             print(data)
         self.conn.close()
     
-def game():
+def startGame(wSalleAttente):
+    wSalleAttente.destroy()
     wGameHost = tkinter.Tk()
     wGameHost.title("Mélange mots - HOST")
+    tkLABEL = tkinter.Label(wGameHost, text="COUCOU JE SUIS LE JEU")
+    tkLABEL.pack()
     wGameHost_x = 600
     wGameHost_y = 500
     wGameHost.geometry(f"{wGameHost_x}x{wGameHost_y}")
